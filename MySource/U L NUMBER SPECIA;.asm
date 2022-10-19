@@ -1,0 +1,65 @@
+;CHR OR NUMBER OR SPECIAL
+.MODEL SMALL
+.STACK 100H
+.DATA
+A DB 'UPPER$'
+B DB 'LOWER$'
+C DB 'DIGIT$'
+D DB 'SPECIAL$'
+.CODE
+MAIN PROC
+    MOV AX,@DATA
+    MOV DS,AX
+    MOV AH,1
+    INT 21H
+    MOV BL,AL
+    
+    CMP BL,'a'
+    JGE LOWER
+    JMP UPPER
+    
+LOWER:
+    CMP BL,'z'
+    JLE LOW
+    JMP UPPER
+UPPER:
+    CMP BL,'A'
+    JGE UPPER1
+    JMP LOWER 
+UPPER1:
+    CMP BL,'Z'
+    JLE UPER
+    JMP DIGIT    
+DIGIT:
+    CMP BL,'0'
+    JGE DIGIT1
+    JMP SPECIAL
+DIGIT1:
+    CMP BL,'9'
+    JLE DIGIT2
+    JMP SPECIAL
+LOW:
+    MOV AH,9
+    LEA DX,B
+    INT 21H
+    JMP EXIT    
+UPER: 
+    MOV AH,9
+    LEA DX,A
+    INT 21H
+    JMP EXIT  
+DIGIT2:
+    MOV AH,9
+    LEA DX,C
+    INT 21H 
+    JMP EXIT
+SPECIAL:
+    MOV AH,9
+    LEA DX,D
+    INT 21H 
+    JMP EXIT
+EXIT:
+    MOV AH,4CH
+    INT 21H
+    MAIN ENDP
+END MAIN
